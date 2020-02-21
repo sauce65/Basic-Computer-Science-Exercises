@@ -1,0 +1,94 @@
+class Node:
+    def __init__(self, data): # creates a linked list node
+        self.data = data # connects 'data' arg to class method that allows data to be referenced
+        self.next = None # builds in the 'next' functionality without requiring there to BE a next node
+
+class SinglyLinkedList:
+    def __init__(self): # creates the linked list itself
+        self.head = None # creates the head as a null to start
+
+    def print_list(self): # allows printing of the list
+        cur_node = self.head # sets the pointer to the head of the list
+        while cur_node: # while current node is not None/Null
+            print(cur_node.data) # prints the data from the current node
+            cur_node = cur_node.next # pushed the current node pointer to the next one by updating the cur_node variable
+
+    def append(self, data): # appends nodes to the END of the linked list
+        new_node = Node(data) # defines what the new node is, which calls Node with data as input
+
+        if self.head is None: # If the list is empty, it just makes this new node the head and returns
+            self.head = new_node
+            return
+
+        last_node = self.head # Else, it takes us to the beginning
+        while last_node.next: # and while the next node viz a viz the last node, where our pointer is, is not None/Null
+            last_node = last_node.next # it iterates along until we reach the Null
+        last_node.next = new_node # Once we are at the end, the next item of the very last node is constructed as new_node
+
+    def prepend(self, data): # adds a node to the BEGINNING of the list
+        new_node = Node(data) # defines what the new node is, which calls Node with data as input
+
+        new_node.next = self.head # Sets the pointer to the beginning
+        self.head = new_node # Then defines the beginning as the new_node, effectively frame-shifting all other nodes
+
+    def insert_after_node(self, prev_node, data): # selects an index where the data gets inserted as a new node
+        if not prev_node: # If you try to insert after a prev node which doesn't exist, throws error message
+            print('Previous node is not in the list')
+            return
+
+        new_node = Node(data) # defines a new node by calling the Node class method
+
+        new_node.next = prev_node.next # Points new node to what the prior node was pointing to
+        prev_node.next = new_node # makes the previous node point to the new node, places new node in that location
+
+    def delete_node(self, key): # deletes a node whose data matches the key
+        cur_node = self.head # sets the current node as the head of the list
+                                              
+        if cur_node and cur_node.data == key: # if the current node (set to head at this moment) is not None and the node data matches the key
+            self.head = cur_node.next # bump the list head to the next node
+            cur_node = None # delete current node
+            return
+        
+        prev = None # if we make it past the head without a match, we need to track the previous node via the prev variable
+
+        while cur_node and cur_node.data != key: # as long as no key match or Null node is not found, it will iterate
+            prev = cur_node
+            cur_node = cur_node.next
+        if cur_node is None: # if we get all the way through without a match, return
+            return
+        else: # otherwise, link the previous node to the next node and delete the current node
+            prev.next = cur_node.next
+            cur_node = None
+
+    def delete_node_at_pos(self, idx): # instead of matching data, match an index in the list
+        cur_node = self.head # start at the front of the list/head
+
+        if idx == 0: # if the index passed is 0, bump the head over and delete current node
+            self.head = cur_node.next
+            cur_node = None
+            return
+
+        prev = None # track previous node
+        count = 1 # start a counter at 1 because the case of the first node has been addressed previously
+        while cur_node and count != idx: # if we haven't counted up to the idx threshold, iterate
+            prev = cur_node
+            cur_node = cur_node.next
+            count += 1
+        if cur_node is None: # if we get all the way through without finding the index we want, return
+            return
+        prev.next = cur_node.next # otherwise we bridge the linkages and delete the current node
+        cur_node = None
+
+    def len_iterative(self): # finds the length of the list by going through and counting each step, returns the count
+        count = 0
+        cur_node = self.head
+
+        while cur_node:
+            count += 1
+            cur_node = cur_node.next
+        return count
+
+    def len_recursive(self, node): # finds the length by recursing and adding 1 every time until the base case, then returns the sum
+        if node is None:
+            return 0
+        return 1 + self.len_recursive(node.next)
