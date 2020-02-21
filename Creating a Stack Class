@@ -1,0 +1,19 @@
+class Stack:
+    def __init__(self): # creates the stack as an empty list
+        self.items = []
+
+    def push(self, data): # pushes the data to the top of the stack
+        self.items.append(data)
+
+    def pop(self): # takes data off the top of the stack
+        return self.items.pop()
+
+    def get_stack(self): # returns the whole stack
+        return self.items
+
+    def is_empty(self): # finds if the stack is empty
+        return self.items == []
+
+    def peek(self): # so long as the stack is not empty, it returns the top item of the stack
+        if not self.is_empty():
+            return self.items[-1]
